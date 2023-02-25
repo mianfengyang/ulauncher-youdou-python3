@@ -6,8 +6,9 @@ import hashlib
 import time
 import sys
 import requests
-reload(sys)
-sys.setdefaultencoding('utf8')
+import sys
+# reload(sys)
+# sys.setdefaultencoding('utf8')
 
 YOUDAO_DEFAULT_KEYFROM = ('whyliam-wf-1', 'whyliam-wf-2', 'whyliam-wf-3',
                           'whyliam-wf-4', 'whyliam-wf-5', 'whyliam-wf-6',
@@ -114,7 +115,7 @@ def get_youdao_new_url(query, zhiyun_id, zhiyun_key):
         '?appKey=' + str(zhiyun_id) + \
         '&salt=' + str(salt) + \
         '&sign=' + str(sign) + \
-        '&q=' + urllib.quote(query) + \
+        '&q=' + urllib.parse.quote(query) + \
         '&from=auto' + \
         '&to=auto' + \
         '&signType=v3' + \
@@ -166,13 +167,24 @@ def check_Update():
         wf.add_item('有道翻译')
 
 
+# def is_English(query):
+#     # 检查英文翻译中文
+#     import re
+
+#     if re.search(ur"[\u4e00-\u9fa5]+", query):
+#         return False
+#     return True
+
+
+
 def is_English(query):
     # 检查英文翻译中文
     import re
-
-    if re.search(ur"[\u4e00-\u9fa5]+", query):
+    if re.search(r"[\u4e00-\u9fa5]+", query):
         return False
     return True
+
+
 
 
 def get_translation(query, isEnglish, rt):
@@ -259,7 +271,8 @@ def translation(query):
     rt = fetch_translation(query)
     errorCode = str(rt.get("errorCode"))
 
-    if ERRORCODE_DICT.has_key(errorCode):
+    # if ERRORCODE_DICT.has_key(errorCode):
+    if errorCode in ERRORCODE_DICT:
         arg = ['', '', '', '', 'error']
         arg = '$%'.join(arg)
         items.append(dict(
